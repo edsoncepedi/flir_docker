@@ -40,24 +40,6 @@ docker build -t flir_streamer .
 
 > **Nota:** Caso o Spinnaker SDK ou o wheel do PySpin sejam atualizados no futuro, certifique-se de que os nomes dos arquivos e caminhos no `Dockerfile` reflitam a nova versão.
 
-## 3. O Ambiente Docker (Spinnaker SDK)
-
-A construção da imagem Docker (`Dockerfile`) resolve diversos gargalos técnicos crônicos de hardwares industriais em containers:
-
-* **Extração Direta (`dpkg-deb -x`):** Em vez de usar `apt-get install` nos arquivos `.deb` da FLIR, os arquivos são descompactados diretamente no sistema. Isso impede que os scripts internos do pacote tentem reiniciar o serviço `udev` (que não existe em containers) e abortem a compilação.
-* **Variáveis de Ambiente GigE:** A configuração define o caminho `GENICAM_GENTL64_PATH`. Sem essa variável estrita, a API do Spinnaker não consegue localizar os drivers GenTL necessários para descobrir as câmeras de rede.
-* **Rede Host:** O container deve operar sem isolamento de rede (`--network host`) para permitir a troca de pacotes de broadcast e Jumbo Frames exigidos pela FLIR A70.
-
-## 4. Como Compilar a Imagem
-
-Com todos os arquivos posicionados, abra o terminal na pasta raiz do projeto e execute a construção da imagem. O processo fará a instalação de dependências como bibliotecas de vídeo (`libavcodec`, `libswscale`) e do próprio Python.
-
-```bash
-docker build -t flir_streamer .
-```
-
-> **Nota:** Caso o Spinnaker SDK ou o wheel do PySpin sejam atualizados no futuro, certifique-se de que os nomes dos arquivos e caminhos no `Dockerfile` reflitam a nova versão.
-
 ## 5. Como Executar a Aplicação
 
 ### 5.1. Iniciando o Servidor de Streaming (Container)
